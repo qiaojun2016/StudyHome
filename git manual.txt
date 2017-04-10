@@ -1,0 +1,92 @@
+git remote add origin + 远端仓库地址
+git remote 列出远程库
+
+1、我在远程建立了一个仓库git
+2、然后本地创建了一个仓库git
+   git remote add origin git@10.0.1.209:QiaoJun/git.git  建立连接
+3、本地拉出一个分支bar 并且切换到该分支
+   git checkout -b bar
+4、将该分支推送到远程
+5、git push origin bar。
+
+按照这个过程来来看
+1、首先在远程创建一个远程仓库叫做 fruit
+2、在本地创建一个本地仓库目录fruit 进入这个目录当中去。
+3、将这个本地的仓库初始化 git init
+4、本地仓库需要知道远程仓库地址: git remote add origin git@10.0.1.209:QiaoJun/fruit.git
+
+接下来你需要向仓库提交点你要保存的东西
+touch README.md
+git add README.md
+git commit -m 'first to commit'
+
+然后推送到远程仓库
+git push origin master  ### 把本地的master分支内容推送到远端仓库，远端没有那么就会创建该分支。
+
+但是如果远程分支已经有了呢？比如zy分支已经有了，你在本地修改并且提交后刚好推送到远端，更新远端你仓库的内容
+git push origin zy
+
+一个很可能的情况是这样的你clone了一个别人的仓库到本地 git clone git@10.0.1.209:QiaoJun/git.git
+那么你默认 仅仅是拿到了其默认分支master，其他的分支还在远端。你应该把其他的所有的分支同步到本地。
+比如你查看到远端分支origin/bar
+那么你需要创建本地分支 git checkout -b bar origin/bar 这样你作了修改之后就可以执行git push origin bar 推送到远端bar。
+或者这样切换 git checkout -t origin/bar
+
+假如你直接执行了git checkout origin/bar 的问题详细查看 
+http://stackoverflow.com/questions/18555072/how-to-correctly-checkout-branches-from-a-remote-repository
+
+在需要push之前一定要实现pull一下当前的分支的内容，防止别人的修改，导致你push的时候引发冲突。可能冲突会自动的合并
+但是如果两个人同时修改一个地方就不能合并了。比如A，B同时对bar分支进行修改。那么在A 把修改结果push之后，B在把自己
+的修改结果push就会导致push失败因为他俩修改的内容是一个地方。
+
+git fetch 与 git pull
+https://www.git-tower.com/learn/git/faq/difference-between-git-fetch-git-pull
+相同点: 都是从远端仓库拉取新的数据到本地
+不同点:
+	git fetch really only downloads new data from a remote repository -
+	but it doesn't integrate any of this new data into your working files.
+	Fetch is great for getting a fresh view on all the things that happened in a remote repository.
+	Due to it's "harmless" nature, you can rest assured: fetch will never manipulate, destroy, or screw up anything.
+	This means you can never fetch often enough.
+	
+	git pull, in contrast, is used with a different goal in mind: to update your current HEAD branch with the latest changes from the remote server.
+	This means that pull not only downloads new data; it also directly integrates it into your current working copy files.
+	This has a couple of consequences:
+        1、Since "git pull" tries to merge remote changes with your local ones, a so-called "merge conflict" can occur.
+        Check out our in-depth tutorial on How to deal with merge conflicts for more information
+	2、Like for many other actions, it's highly recommended to start a "git pull" only with a clean working copy. 
+	This means that you should not have any uncommitted local changes before you pull。
+
+Dealing with Merge Conflicts
+https://www.git-tower.com/learn/git/ebook/en/command-line/advanced-topics/merge-conflicts
+git merge --abort  回到merge 之前
+git reset --hard   回到merge 之前的一次提交
+
+
+
+问题描述：
+	在公司我clone了一个项目，然后直接git checkout origin/xxx 某个远程的分支,很明显这样做是不对的。并且我对该分支进行
+	了修改，修改完成之后由于不能push 我就执行了 git checkout -b "newbranch" 
+	然后又执行了git checkout -b ff origin/xxx 将 newbranch 合并到了 ff 上 然后push 到远端了。
+	
+	这样的问题就是我所有的修改都会发送到远端。
+
+	git checkout -b "mybranchname" origin/xxx 修改提交之后，执行
+	git push mybranchname 会发生什么呢？
+
+
+暂时存储对数据的改变 git stash命令的用法 --最好别用啊 都记不住了
+
+合并分支发生冲突
+git log 查看分支的合并情况
+git log --graph
+git log --graph --pretty=oneline --abbrev-commit
+
+
+git 撤销操作
+	背景：今天提交了一些东西，但还有些东西没有提交，想重新提交。
+git stash
+
+查看某一个文件的修改历史
+1、找到文件所在的文件夹
+2、git log --pretty

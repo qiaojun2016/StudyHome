@@ -1,0 +1,82 @@
+Android 命名规范
+
+基本规则
+what_where_decription_size
+
+what 表示代表什么什么样的资源，例如MainActivity-> activity
+where 表示属于app逻辑的什么地方，也就是引用的地方。如果很多地方都引用了这个资源。
+		就用all,MainActivity-main,ArticleDetailFragment-articledetail
+description
+	资源在某个屏幕的元素 例如title
+
+size
+	这是可选的，一个精确的大小，或者是范围描述。主要用在drawables 和 dimensions 24dp，small
+
+
+Layouts 
+	what_where.xml
+what :
+	activity activity的视图
+	fragment 碎片的视图
+	view     需要 inflate的布局文件
+	item     在列表控件中使用的布局
+	layout   在include 中引用的 布局
+
+where 一般是类名
+
+Strings
+	where_description
+	all_description
+
+	eg: articledetail_title
+		feedback_epl
+		all_done
+
+Dimension 资源
+	what_<all>_description_<size>
+	what_<all>_<where>_description_<size>
+	size 代表精确的大小
+	what:
+		width
+		height
+		size if width == height
+		margin
+		padding
+		elevation
+		keyline
+		textsize sp
+
+		eg: height_toolbar
+			keyline_lsittext
+			size_menu_icon what_all_where_description_<size>
+			textsize_medium
+			height_menu_profileimage
+
+
+IDS
+what_where_description
+	what: class name of xml element it belongs to
+	where: screen the ID is in
+	description: 区分同一个屏幕中的相同元素,一般就是它是干什么的
+
+	eg: 
+		tablayot_main 					TableLayout in MainActivity
+		imageview_menu_profile 			profile image in custom MenuView
+		textview_articledetail_title 	title TextView in ArticleDetailFragment
+
+
+colors
+ color_16进制颜色值 eg color_ff0000
+
+ 通常把所有界面的 元素放到一起，或者一类的。
+
+
+ drawable 
+  all_where_description_size
+
+  
+
+
+
+
+

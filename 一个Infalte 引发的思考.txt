@@ -1,0 +1,80 @@
+一个Infalte 引发的思考
+背景：
+今天项目中用到了RecyclerView，但是已经差不多忘了怎么用了。作为代码的搬运工，我迅速从网上找到了模板。
+三下两下把代码写了。然后，我写了一个item，我大概是这么写的
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="96dp">
+    <ImageView
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_camera"
+        />
+</RelativeLayout>
+
+
+ <RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="96dp">
+</RecyclerView>
+
+ 在 onCreateViewHolder 中：
+ 	View view = LayoutInflater.from(context).inflate(R.layout.item, null);
+ 	注：我使用的是LinearLayoutManager，横向布局方式
+
+ 但是出问题了，在现实过程中我发现，item 并没有垂直居中显示的，我的意思是说，因为RecyclerView
+ 我刚刚设置了高度96dp, 我的item高度也是96dp，那么我的ImageView 应该垂直显示啊 。这就有点操蛋了
+ 于是我把item的布局的高度改为match_parent ，然而并没有什么卵用。我怀疑，这个RelativeLayout的
+ 高度和宽度根本没有就没有用到。
+
+ 问题出在哪呢？我直接说出来，大家看看我这个有没有问题：
+ View view = LayoutInflater.from(context).inflate(R.layout.item, null);
+ View view = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+
+ 这个parent 就是onCreateViewHolder 传递进来的ViewGrup parent。这里面的parent 参数
+ 的含义想必查过资料同学都知道：
+ 如果我设置了true那么就是返回的View的根布局
+ 如果我设置了false那么，就使用parent来创建这个View根布局的LayoutParams。
+
+ 我有个问题想问一下大家：
+ 比如我们的ImageView 他的layout_height 和 layout_width 是给谁用的？
+ 我们都知道这俩属性是来设置ImageView的高度和宽度。但我想表述的更清楚
+ 一些：这俩属性是用来设置在其父控件中的高度和宽度的，如果没有了父控件
+ 这些高度和宽度将没有意义，不知道大家有没有理解我的意思。还有一个特点
+ 就是，为什么layout_开头，而不是android:width,明显这是和父控件有关的，给父控件用的。我
+ 不多说了。
+ 
+ 回到原来的问题，inflate的问题，我简单的看了一下infalte的源码,基本过程是这样的
+ 	创建根布局容器(我们这个就是RelativeLayout) 
+ 	如果parent是存在的，就用parent返回一个LayoutParams，设置给创建好的根布局容器具。
+ 	如果不存在，就不会设置。
+ 	递归创建它的child view。
+
+ 想必同志们都用过动态创建过View，比如创建一个 TextView，把他放到一个LinearLayout中，如果
+ 你没有主动调用 TextView setLayoutParams()，你在addView的时候LinearLayout会替你加上。
+ 如果不加上，那么父容器就无法知道，这个TextView 在父容器中占据多大的位置。你又会问，
+ TextView 自身应该有个大小吧，那是当然。所以wrap_content 这个值才存在。用这个就是说
+ 这个TextView 实际多大就多大巴。我(父容器)也不管了。
+
+ 还是得解决项目问题啊：
+ 明显，我用LayoutInflater.from(context).inflate(R.layout.item, null) 来填充，结果导致了
+ 没有设置 RelativeLayout 的 LayoutParam参数。然后在向RecycleView添加的时候，RecycleView发现
+ 要被添加的这个View 竟然没有LayoutParam 参数，于是RecyclerView主动为RelativeLayout设置了LayotParams参数
+ 两个wrap_content.
+
+ 经过就是这样，  	android:layout_width="match_parent" 
+ 					android:layout_height="96dp"
+
+ 被替换成了			android:layout_width="wrap_content" 
+ 					android:layout_height="wrap_content"
+
+ 现实就是这么残酷。
+ 至于怎么解决，就看你们的了。
+
+
+ generateDefaultLayoutParams() 是用于为我们所添加的View 生成默认的LayoutParams参数
+ 每个继承ViewGroup的layout 都重写了 这个方法。
+ 

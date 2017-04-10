@@ -1,0 +1,17 @@
+Shader (着色器)
+BitmapShader
+ComposeShader 
+LinearGradient
+RadialGradient
+SweepGradient
+着色器 在渲染的时候，土话叫上色的时候，会返回一定跨度的颜色。
+一般就是用Paint.set出Shader()来设置，这样在绘制的时候，
+除了 绘制bitmap其他 的任何对象都会用着色器返回的颜色。
+而我们平时将 Paint.setColor() 只能设置一种颜色。
+
+BitmapShader 
+这个时候，我们的染料就是一个个位图图像。
+构造方法就是传入 一个Bitmap 对象，然后告诉他 横向和
+纵向的平铺方式(Shader.TileMode)
+
+what is android matrix ?

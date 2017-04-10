@@ -1,0 +1,29 @@
+首先 ImageView 的 src 与 background 有什么区别？
+	background 是背景，src是内容，是前景。
+	backgound 会被自动拉伸至合适的高度。而src 需要主动调整。
+
+怎样理解Android Drawable ?
+按照官网说的 "something that can be draw" 
+它代表某种类型的资源被显示到屏幕上，不单单像是位图资源。还有颜色，一些图形变换资源的xml文件等。与view 不同的是它 没有与用户交互的监听事件。
+
+Drawable 几个比较重要的方法：
+setBounds(Rect) 告诉Drawable 画在什么位置？占多大区域?
+getPadding(Rect)
+
+
+Drawable的几种形式：
+Bitmap
+Nine Patch
+Vector
+Shape  包括一些绘画过程中的"指令"等
+Layers 组合的Drawable
+States 组合的一套Drawable，根据不同的状态选择不同的Drawable
+Levels
+Scales
+
+/*************************************************/
+
+
+
+
+
